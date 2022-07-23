@@ -1,0 +1,135 @@
+from sys import exit
+
+
+def display_board(game_state_str):
+    line_1_list = [i for i in game_state_str[:3]]
+    line_2_list = [i for i in game_state_str[3:6]]
+    line_3_list = [i for i in game_state_str[6:9]]
+
+    matrix_list = [line_1_list, line_2_list, line_3_list]
+
+    line_1 = "| " + " ".join(line_1_list) + " |"
+    line_2 = "| " + " ".join(line_2_list) + " |"
+    line_3 = "| " + " ".join(line_3_list) + " |"
+    grid_border = "---------"
+
+    print(grid_border)
+    print(line_1)
+    print(line_2)
+    print(line_3)
+    print(grid_border)
+
+    return matrix_list
+
+
+def display_game_results(matrix_list, game_state_string):
+    x_wins = 0
+    o_wins = 0
+
+    if matrix_list[0][0] == matrix_list[0][1] and matrix_list[0][0] == matrix_list[0][2]:
+        if matrix_list[0][0] == "X":
+            x_wins += 1
+        elif matrix_list[0][0] == "O":
+            o_wins += 1
+    # row 1
+
+    if matrix_list[1][0] == matrix_list[1][1] and matrix_list[1][0] == matrix_list[1][2]:
+        if matrix_list[1][0] == "X":
+            x_wins += 1
+        elif matrix_list[1][0] == "O":
+            o_wins += 1
+    # row 2
+
+    if matrix_list[2][0] == matrix_list[2][1] and matrix_list[2][0] == matrix_list[2][2]:
+        if matrix_list[2][0] == "X":
+            x_wins += 1
+        elif matrix_list[2][0] == "O":
+            o_wins += 1
+    # row 3
+
+    if matrix_list[0][0] == matrix_list[1][1] and matrix_list[0][0] == matrix_list[2][2]:
+        if matrix_list[0][0] == "X":
+            x_wins += 1
+        elif matrix_list[0][0] == "O":
+            o_wins += 1
+    # diagonal
+
+    if matrix_list[0][2] == matrix_list[1][1] and matrix_list[0][2] == matrix_list[2][0]:
+        if matrix_list[0][2] == "X":
+            x_wins += 1
+        elif matrix_list[0][2] == "O":
+            o_wins += 1
+    # diagonal
+
+    if matrix_list[0][0] == matrix_list[1][0] and matrix_list[0][0] == matrix_list[2][0]:
+        if matrix_list[0][0] == "X":
+            x_wins += 1
+        elif matrix_list[0][0] == "O":
+            o_wins += 1
+    # column 1
+
+    if matrix_list[0][1] == matrix_list[1][1] and matrix_list[0][1] == matrix_list[2][1]:
+        if matrix_list[0][1] == "X":
+            x_wins += 1
+        elif matrix_list[0][1] == "O":
+            o_wins += 1
+    # column 2
+
+    if matrix_list[0][2] == matrix_list[1][2] and matrix_list[0][2] == matrix_list[2][2]:
+        if matrix_list[0][2] == "X":
+            x_wins += 1
+        elif matrix_list[0][2] == "O":
+            o_wins += 1
+    # column 3
+
+    if x_wins > 0:
+        return print("X wins"), exit()
+    if o_wins > 0:
+        return print("O wins"), exit()
+    if "_" not in game_state_string:
+        return print("Draw"), exit()
+
+
+def player_input(matrix_list, player_symbol):
+    while True:
+        player_move_list = input(" ").split()
+        if not player_move_list[0].isnumeric():
+            print("You should enter numbers!")
+            continue
+        elif not player_move_list[1].isnumeric():
+            print("You should enter numbers!")
+            continue
+        elif not 1 <= int(player_move_list[0]) <= 3:
+            print("Coordinates should be from 1 to 3!")
+            continue
+        elif not 1 <= int(player_move_list[1]) <= 3:
+            print("Coordinates should be from 1 to 3!")
+            continue
+        elif matrix_list[int(player_move_list[0]) - 1][int(player_move_list[1]) - 1] != "_":
+            print("This cell is occupied! Choose another one!")
+            continue
+        break
+    matrix_list[int(player_move_list[0]) - 1][int(player_move_list[1]) - 1] = player_symbol
+    updated_game_state = ""
+    for lists in matrix_list:
+        updated_game_state += "".join(lists)
+    return updated_game_state
+
+
+game_state = "_________"
+
+turn_counter = 0
+
+while True:
+    if turn_counter % 2 == 0:
+        symbol = "X"
+    else:
+        symbol = "O"
+
+    matrix = display_board(game_state)
+
+    display_game_results(matrix, game_state)
+
+    game_state = player_input(matrix, symbol)
+
+    turn_counter += 1
